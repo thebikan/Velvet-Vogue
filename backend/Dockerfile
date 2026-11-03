@@ -1,4 +1,5 @@
-FROM php:8.4-fpm-bookworm
+ARG PHP_VERSION=8.4
+FROM php:${PHP_VERSION}-fpm-bookworm
 RUN apt-get update && apt-get install -y --no-install-recommends libonig-dev libxml2-dev unzip git \
     && docker-php-ext-install pdo_mysql mbstring dom xml xmlwriter opcache \
     && pecl install redis && docker-php-ext-enable redis \

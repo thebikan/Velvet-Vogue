@@ -20,13 +20,13 @@ Open `http://127.0.0.1:5173`. Routes:
 - `/#/admin` — dashboard preview, empty trading states and live health checks.
 - `/#/admin/products`, `/orders`, `/customers`, `/analytics`, `/settings` — workspace sections (each under `/#/admin`).
 
-The dev server proxies `/api/` to `http://127.0.0.1:8080` by default. Override for another local PHP endpoint:
+The dev server proxies `/api/v1` to the XAMPP Apache listener at `http://127.0.0.1:8081` by default. See [Windows XAMPP setup](../backend/docs/WINDOWS-XAMPP.md). Override for another local PHP endpoint:
 
 ```sh
-API_PROXY_TARGET=http://127.0.0.1:18080 npm run dev
+API_PROXY_TARGET=http://127.0.0.1:8080 npm run dev
 ```
 
-The preview is useful without a running backend; the dashboard reports an unavailable connection honestly. The development proxy is a convenience for the implemented public probes, not a production authentication proxy. Production should serve `dist/` and proxy `/api/v1` to PHP on the same origin, preserving the backend's security configuration. The PHP document root remains `backend/public`.
+The preview is useful without a running backend; the dashboard reports an unavailable connection honestly. The development proxy forwards JSON bodies, cookie/session, CSRF, authorization and idempotency headers and Set-Cookie responses, with local Host/Origin checks. Only public probes are currently implemented by the backend; forwarding cookies does not implement authentication. This is not a production proxy. Production should serve `dist/` and proxy `/api/v1` to PHP on the same origin, preserving the backend's security configuration. The PHP document root remains `backend/public`.
 
 ## Scope and integration boundary
 

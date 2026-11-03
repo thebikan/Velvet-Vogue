@@ -4,7 +4,7 @@
   "type": "project",
   "license": "proprietary",
   "require": {
-    "php": "~8.4.0",
+    "php": ">=8.2 <8.5",
     "ext-pdo": "*",
     "ext-pdo_mysql": "*",
     "ext-json": "*",
@@ -53,6 +53,9 @@
   },
   "config": {
     "sort-packages": true,
-    "allow-plugins": {}
+    "allow-plugins": {},
+    "platform": {
+      "php": "8.2.0"
+    }
   }
 }

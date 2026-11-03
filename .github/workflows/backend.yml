@@ -9,6 +9,9 @@ permissions:
 jobs:
   foundation:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.2', '8.4']
     defaults:
       run:
         working-directory: backend
@@ -17,7 +20,7 @@ jobs:
       - name: Set ephemeral test credentials
         run: |
           printf 'DB_PASSWORD=%s\nTEST_DB_PASSWORD=%s\n' "$(openssl rand -hex 24)" "$(openssl rand -hex 24)" > .env
-      - run: docker compose build
+      - run: docker compose build --build-arg PHP_VERSION=${{ matrix.php }}
       - run: docker compose run --rm php composer install --no-interaction --prefer-dist
       - run: docker compose --profile test up -d --wait
       - run: docker compose exec -T php composer validate --strict

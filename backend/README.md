@@ -1,14 +1,18 @@
 # Velvet Vogue backend — Phase 1
 
-PHP 8.4 modular monolith with a custom kernel and MVC module boundaries. Symfony components supply HTTP requests/responses, routing matching, validation, CSRF, cache and rate limiting; PHP-DI supplies the container, Monolog structured logging, and phpdotenv environment loading. No Symfony full-stack framework is installed. JSON is the API view layer. Future modules own Controllers, Services and Repositories inside their existing `src/Modules/<Module>` directory; controllers translate HTTP, services coordinate use cases/transactions, repositories alone issue business SQL. No business repositories are invented before the schema review.
+PHP 8.2–8.4 modular monolith with a custom kernel and MVC module boundaries. Symfony components supply HTTP requests/responses, routing matching, validation, CSRF, cache and rate limiting; PHP-DI supplies the container, Monolog structured logging, and phpdotenv environment loading. No Symfony full-stack framework is installed. JSON is the API view layer. Future modules own Controllers, Services and Repositories inside their existing `src/Modules/<Module>` directory; controllers translate HTTP, services coordinate use cases/transactions, repositories alone issue business SQL. No business repositories are invented before the schema review.
 
 ## Inspected baseline
 
 The existing 15 backend files were empty. No SQL schema or secrets were supplied. See [database inspection](database/README.md). No frontend files or existing root documentation were changed. Schema verification remains a Phase 2 prerequisite.
 
-## Local setup without Docker
+## Primary local setup: Windows XAMPP
 
-Install PHP **8.4** and Composer 2; enable PDO MySQL, mbstring, XML/DOM/XMLWriter (tests), and Redis (for Redis mode). On macOS, Homebrew's `php@8.4` is an option; on Linux use your distribution's supported PHP 8.4 packages. Confirm `php -v`, `php -m`, and `composer check-platform-reqs`.
+Follow [the Windows XAMPP guide](docs/WINDOWS-XAMPP.md). It includes runtime inspection, Apache private-path protection, same-origin frontend proxying and database metadata checks. No Docker installation is required. The full commerce schema remains pending.
+
+## Other local setup without Docker
+
+Install PHP **8.2–8.4** and Composer 2; enable PDO MySQL, mbstring, XML/DOM/XMLWriter (tests), and Redis (for Redis mode). On macOS, Homebrew's `php@8.4` is an option; on Linux use your distribution's supported PHP 8.4 packages. Confirm `php -v`, `php -m`, and `composer check-platform-reqs`.
 
 ```sh
 cd backend
