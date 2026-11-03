@@ -1,0 +1,11 @@
+parameters:
+    level: 5
+    # PDO transaction state changes after beginTransaction/commit/rollback.
+    rememberPossiblyImpureFunctionValues: false
+    paths:
+        - src
+        - bootstrap
+        - config
+        - routes
+        - bin
+        - public

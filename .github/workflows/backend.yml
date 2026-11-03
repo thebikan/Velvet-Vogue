@@ -1,0 +1,34 @@
+name: Backend checks
+on:
+  push:
+    paths: ['backend/**', '.github/workflows/backend.yml']
+  pull_request:
+    paths: ['backend/**', '.github/workflows/backend.yml']
+permissions:
+  contents: read
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set ephemeral test credentials
+        run: |
+          printf 'DB_PASSWORD=%s\nTEST_DB_PASSWORD=%s\n' "$(openssl rand -hex 24)" "$(openssl rand -hex 24)" > .env
+      - run: docker compose build
+      - run: docker compose run --rm php composer install --no-interaction --prefer-dist
+      - run: docker compose --profile test up -d --wait
+      - run: docker compose exec -T php composer validate --strict
+      - run: docker compose exec -T php composer check-platform-reqs
+      - run: docker compose exec -T php composer check
+      - run: docker compose exec -T php composer test:database
+      - run: docker compose exec -T -e CACHE_DRIVER=redis -e REDIS_URL=redis://redis-test:6379 php composer test:redis
+      - run: docker compose exec -T php composer audit
+      - name: HTTP smoke tests
+        run: |
+          curl --fail --silent http://127.0.0.1:8080/api/v1/health
+          curl --fail --silent http://127.0.0.1:8080/api/v1/ready
+      - if: always()
+        run: docker compose --profile test down -v

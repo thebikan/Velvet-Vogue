@@ -1,0 +1,82 @@
+openapi: 3.1.0
+info:
+  title: Velvet Vogue — implemented API
+  version: 0.1.1
+  description: >-
+    Foundation endpoints only. Customer authentication, catalogue, carts, checkout,
+    orders, payments and administration are not implemented. This specification
+    deliberately does not advertise those operations as available.
+servers:
+  - url: /api/v1
+paths:
+  /health:
+    get:
+      operationId: liveness
+      summary: Process liveness without database or Redis access
+      responses:
+        '200':
+          description: Process is alive
+          headers:
+            X-Request-ID:
+              schema: { type: string }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProbeSuccess' }
+    head:
+      operationId: livenessHead
+      summary: Liveness headers with no response body
+      responses:
+        '200': { description: Process is alive }
+  /ready:
+    get:
+      operationId: readiness
+      summary: Database connectivity and cache read/write readiness
+      description: Does not verify commerce-schema compatibility or external gateways.
+      responses:
+        '200':
+          description: Required dependencies responded
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProbeSuccess' }
+        '503':
+          description: Dependency unavailable; diagnostics are not exposed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    head:
+      operationId: readinessHead
+      summary: Readiness headers with no response body
+      responses:
+        '200': { description: Dependencies responded }
+        '503': { description: Dependency unavailable }
+components:
+  schemas:
+    ProbeSuccess:
+      type: object
+      required: [data, error, meta]
+      properties:
+        data:
+          type: object
+          required: [status]
+          properties:
+            status: { type: string, enum: [alive, ready] }
+        error: { type: 'null' }
+        meta: { $ref: '#/components/schemas/Meta' }
+    Meta:
+      type: object
+      required: [request_id]
+      properties:
+        request_id: { type: string, pattern: '^[a-f0-9]{32}$' }
+    Error:
+      type: object
+      required: [data, error, meta]
+      properties:
+        data: { type: 'null' }
+        error:
+          type: object
+          required: [code, message, details]
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details: { type: object, additionalProperties: true }
+        meta: { $ref: '#/components/schemas/Meta' }

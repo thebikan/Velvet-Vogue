@@ -1,0 +1,3 @@
+Probe `/api/v1/health` for process liveness and `/api/v1/ready` for database/cache readiness. Readiness returns 503 with no dependency details; alert using request IDs and sanitized structured logs. Probes are exempt from application rate limits. Add ingress allowlists for probes where appropriate.
+
+Collect latency percentiles, status counts, FPM queue depth, worker memory, MySQL connections/slow queries, Redis latency and cache evictions. Never log Authorization, cookies, request/response bodies, raw query strings or SQL parameters. Send deployed JSON logs to a restricted collector with retention and deletion policy. Restrict access to infrastructure error logs as well.

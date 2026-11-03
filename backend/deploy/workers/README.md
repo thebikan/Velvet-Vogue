@@ -1,0 +1,1 @@
+No worker services are enabled in Phase 1. Entrypoints exit with configuration status 78. Phase 2 must implement durable queue storage, bounded retries/backoff, idempotency, dead-letter handling, signal-aware graceful shutdown and supervised restart policies before enabling workers.
